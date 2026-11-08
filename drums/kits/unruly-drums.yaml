@@ -1,0 +1,45 @@
+# Unruly Drums by Karoryfer Samples (CC0), as a core16 kit. Built by
+# tools/sfzkit.py from the kit's own SFZ program; see ../README.md.
+#
+# Every drum has snare wires, the kick too: the toms are snares (13", 14"
+# and a 22" one) played as toms. Played the way it loads.
+
+name: unruly-drums
+title: Unruly Drums
+description: A kit where every drum has snare wires on it, the kick included
+creator: Karoryfer Samples
+licence: CC0-1.0
+source: sfz
+content_root: ~/Samples/SFZ/Unruly Drums
+program: Programs/03-kit-complete.sfz
+
+# For the Drum Machine preset (tools/drumkit.py), set up the way Bitwig's
+# own acoustic kits are (Acoustic Drums Kit Yamaha): 12 voices a pad, so a
+# re-hit rings over the last one, and only the hi-hat chokes: any closed hat
+# cuts the open one, never the other way round.
+voices: 12
+chokes:
+  - {from: [hat-closed], to: [hat-open]}
+
+roles:
+  # Where a drum is on several pads (both banks double the kick, snare and
+  # closed hat), the pads take the main articulation and `alt` in turn.
+  kick: {key: 36, alt: {key: 35, name: dirty, short: dt}}
+  snare: {key: 38, alt: {key: 39, name: edge, short: ed}}
+  snare-rimshot: {key: 40}
+  snare-sidestick: {key: 37}
+  hat-closed: {key: 42, alt: {key: 54, name: shank, short: sh}}
+  hat-open: {key: 46}
+  # The 13" and 14" snares as rack toms, the 22" as both floor toms, its edge
+  # first and then its centre.
+  tom-rack-1: {key: 47}
+  tom-rack-2: {key: 45}
+  tom-floor-1: {key: 43}
+  tom-floor-2: {key: 41}
+  # One crash: its edge, and its bow on the second crash pad.
+  crash-1: {key: 49}
+  crash-2: {key: 57, substitute: crash bow}
+  ride-bow: {key: 51}
+  ride-bell: {key: 53}
+  # Bank B only (core16-bank-b). No china: the ride's edge stands in.
+  china: {key: 55, substitute: ride edge}

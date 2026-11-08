@@ -1,0 +1,134 @@
+# core16-bank-b — bank B of the MPD218's BW_PADS, laid out like a drum kit.
+#
+# Bank B sends notes 52-67 chromatically on channel 10. It began as SSD5's own
+# bank B (MPD218.iom on the box, see midi/mpd218/mappings/ssd5.md, "Bank B")
+# and now differs from it in three places: the toms run high to low, pad 6 is
+# the rimshot where SSD5 has a second snare, and pad 8's sidestick is the
+# kit's other cross-stick. Kick, sidestick and closed hat appear twice; which
+# of the two takes the kit's alternative sound (`articulation:`) and what each
+# pad is called (`label:`) are set here, the same in every kit.
+#
+# The roles are core16's plus a china, which SSD5 plays on pad 4. A kit
+# without one says which sound stands in for it.
+
+name: core16-bank-b
+title: Core 16 bank B
+channel: 10
+
+roles:
+  kick:
+    label: Kick
+    short: Kick
+    gm: 36
+    colour: red
+    ssd5: Kick Center
+  snare:
+    label: Snare
+    short: Snare
+    gm: 38
+    colour: amber
+    ssd5: Snare Side
+  snare-rimshot:
+    label: Snare Rimshot
+    short: RShot
+    gm: 40
+    colour: orange
+    ssd5: Snare Rimshot Edge
+  snare-sidestick:
+    label: Snare Sidestick
+    short: SStick
+    gm: 37
+    colour: yellow
+    ssd5: Snare Sidestick
+  hat-closed:
+    label: Hat Closed
+    short: HHatC
+    gm: 42
+    colour: teal
+    ssd5: Hi-Hat Tip Closed Tight
+  hat-open:
+    label: Hat Open
+    short: HHatO
+    gm: 46
+    colour: cyan
+    ssd5: Hi-Hat Shank Open 1
+  tom-rack-1:
+    label: Rack Tom 1
+    short: RTom1
+    gm: 48
+    colour: green
+    ssd5: Rack Tom 1 Center
+  tom-rack-2:
+    label: Rack Tom 2
+    short: RTom2
+    gm: 47
+    colour: lime
+    ssd5: Rack Tom 2 Center
+  tom-floor-1:
+    label: Floor Tom 1
+    short: FTom1
+    gm: 45
+    colour: sea-green
+    ssd5: Floor Tom 1 Center
+  tom-floor-2:
+    label: Floor Tom 2
+    short: FTom2
+    gm: 43
+    colour: light-green
+    ssd5: Floor Tom 2 Center
+  crash-1:
+    label: Crash 1
+    short: Crash1
+    gm: 49
+    colour: dodger-blue
+    ssd5: Crash Left Edge
+  crash-2:
+    label: Crash 2
+    short: Crash2
+    gm: 57
+    colour: blue
+    ssd5: Crash Right Edge
+  ride-bow:
+    label: Ride Bow
+    short: RBow
+    gm: 51
+    colour: violet
+    ssd5: Ride Bow Shank
+  ride-bell:
+    label: Ride Bell
+    short: RBell
+    gm: 53
+    colour: magenta
+    ssd5: Ride Bell
+  china:
+    label: China
+    short: China
+    gm: 52
+    colour: blue
+    ssd5: China Edge
+
+pads:
+  # Bottom row: Crash2 Kick2 Kick1 China. Kick2 is the kit's other kick (its
+  # alt), or the kick's other recordings.
+  - {pad: 1,  note: 52, role: crash-2}
+  - {pad: 2,  note: 53, role: kick, articulation: alt, label: Kick2}
+  - {pad: 3,  note: 54, role: kick, same_as: 2, articulation: main, label: Kick1}
+  - {pad: 4,  note: 55, role: china}
+  # SStick RShot Snare SStk2: the second sidestick is the kit's other
+  # cross-stick where it has one, else other recordings of the same.
+  - {pad: 5,  note: 56, role: snare-sidestick, articulation: main}
+  - {pad: 6,  note: 57, role: snare-rimshot}
+  - {pad: 7,  note: 58, role: snare, articulation: main}
+  - {pad: 8,  note: 59, role: snare-sidestick, same_as: 5, articulation: alt, label: SStk2}
+  # HHatCF HHatO HHatC RBow: HHatCF is the closed hat's alt (pedal, foot,
+  # shank or tight, whichever the kit has).
+  - {pad: 9,  note: 60, role: hat-closed, articulation: alt, label: HHatCF}
+  - {pad: 10, note: 61, role: hat-open}
+  - {pad: 11, note: 62, role: hat-closed, same_as: 9, articulation: main, label: HHatC}
+  - {pad: 12, note: 63, role: ride-bow}
+  # Three toms, highest to lowest as in bank A (SSD5's own map runs them low
+  # to high); the second floor tom sits out.
+  - {pad: 13, note: 64, role: tom-rack-1}
+  - {pad: 14, note: 65, role: tom-rack-2}
+  - {pad: 15, note: 66, role: tom-floor-1}
+  - {pad: 16, note: 67, role: crash-1}

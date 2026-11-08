@@ -1,0 +1,50 @@
+# Gogodze Phu Vol II by Karoryfer Samples (CC0), as a core16 kit. Built by
+# tools/sfzkit.py from the kit's own SFZ program; see ../README.md.
+#
+# A dead, 1970s-sounding kick, snare, three toms and hi-hat, played the way
+# it loads: the default mic mix, with its high-passed mics and the delays
+# that line them up. The kit has no cymbals, so they come from Big Rusty
+# Drums (`from:`), Karoryfer's other vintage kit.
+
+name: gogodze-phu-vol-ii
+title: Gogodze Phu Vol II
+description: Lo-fi 1970s kick, snare, toms and hats, with Big Rusty's cymbals
+creator: Karoryfer Samples
+licence: CC0-1.0
+source: sfz
+content_root: ~/Samples/SFZ/Gogodze Phu Vol II
+program: Programs/Kit.sfz
+
+# For the Drum Machine preset (tools/drumkit.py), set up the way Bitwig's
+# own acoustic kits are (Acoustic Drums Kit Yamaha): 12 voices a pad, so a
+# re-hit rings over the last one, and only the hi-hat chokes: any closed hat
+# cuts the open one, never the other way round.
+voices: 12
+chokes:
+  - {from: [hat-closed], to: [hat-open]}
+
+roles:
+  # Where a drum is on several pads (both banks double the kick, snare and
+  # closed hat), its four round-robin takes are dealt out between them.
+  kick: {key: 36}
+  snare: {key: 38, alt: {key: 40, name: edge, short: ed}}
+  # No rimshot: Frankensnare's 14x8" aluminium snare plays one.
+  snare-rimshot: {key: 38, from: frankensnare-14x8al-rims}
+  snare-sidestick: {key: 37}
+  # Key 46 runs closed to open on the hi-hat position CC (4), which the
+  # program leaves at 0: closed. The open hat is the same key fully open.
+  hat-closed: {key: 46, alt: {key: 42, name: tight, short: t}}
+  hat-open: {key: 46, cc: {4: 127}}
+  # Three toms. The fourth is the low tom three semitones down with the
+  # kit's own tuning (±1200 cents over CC 108, centre 63.5).
+  tom-rack-1: {key: 45}
+  tom-rack-2: {key: 43}
+  tom-floor-1: {key: 41}
+  tom-floor-2: {key: 41, cc: {108: 47.6}}
+  # Big Rusty Drums' cymbals, at that kit's keys and defaults.
+  crash-1: {key: 49, from: big-rusty-drums}
+  crash-2: {key: 65, from: big-rusty-drums}
+  ride-bow: {key: 51, from: big-rusty-drums}
+  ride-bell: {key: 53, from: big-rusty-drums}
+  # Bank B only (core16-bank-b).
+  china: {key: 57, from: big-rusty-drums}

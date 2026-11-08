@@ -2,8 +2,8 @@
 
 Free sample libraries ported to Bitwig Studio's `.multisample` format, starting
 with acoustic drum kits made from SFZ libraries. Each library is its own
-release; this repository holds only this guide. The drum ports are made by
-[`sfzkit.py`](https://github.com/HomeLab-Forge/audio-rig/tree/main/drums) from
+release; this repository holds this guide and the tools. The drum ports are made by
+the tools in [`drums/`](drums/) (MIT, see [LICENSE](LICENSE)) from
 each library's own SFZ program at its default settings.
 
 This is not an official Bitwig project and is not affiliated with Bitwig GmbH.
@@ -16,8 +16,8 @@ control.
 ## Releases
 
 One library per release, tagged `bitwig-samples-<slug>-v<version>` and
-titled `Audio Rig: <Library>`, for example `bitwig-samples-swirly-drums-v1.0`,
-`Audio Rig: Swirly Drums`. Each release page lists the original kit, its
+titled `Bitwig <Library>`, for example `bitwig-samples-swirly-drums-v1.0`,
+`Bitwig Swirly Drums`. Each release page lists the original kit, its
 authors and licence, how the port differs from the original, and every file
 with its notes, velocity layers and round robins.
 
