@@ -1,0 +1,137 @@
+# core16 — the drum layout every plugin here is built from.
+#
+# The pad and its role are the fixed part. Pad 1 is the kick in SSD5, in
+# Bitwig's Drum Machine and in whatever gets tried next, because they are all
+# generated from this file rather than set up one at a time. Changing where a
+# drum sits is an edit here followed by a regenerate; see ../README.md.
+#
+# The notes are the ones the controllers already send: 36-51 chromatically on
+# channel 10, which is bank A of midi/mpd218/presets/BW_PADS.mpd218 and the
+# MPK's pad bank. SSD5 answers that range one-to-one, so this is also SSD5's
+# own layout as read off the plugin in midi/mpd218/mappings/ssd5.md — hence the
+# `ssd5:` names below, and hence two pads that double up: SSD5 has the same
+# articulation on 38 and 39, and a kick on both 36 and 40.
+#
+# `gm:` is where General MIDI puts the same drum. It is not what the pads send;
+# it is what a GM-mapped plugin expects to receive, and the note map in the
+# generated documentation is the translation between the two.
+
+name: core16-bank-a
+title: Core 16
+channel: 10
+
+# label    what the pad is called everywhere it gets a name
+# short    the same in a few letters, for the Drum Machine's narrow pads
+# gm       the General MIDI note for this drum
+# colour   MPK pad colour, by palette name (see daw/bitwig/scripts/lib/palette.js)
+# ssd5     the articulation SSD5 plays on this layout's note
+roles:
+  kick:
+    label: Kick
+    short: Kick
+    gm: 36
+    colour: red
+    ssd5: Kick Center
+  snare:
+    label: Snare
+    short: Snare
+    gm: 38
+    colour: amber
+    ssd5: Snare Side
+  snare-rimshot:
+    label: Snare Rimshot
+    short: RShot
+    gm: 40
+    colour: orange
+    ssd5: Snare Rimshot Edge
+  snare-sidestick:
+    label: Snare Sidestick
+    short: SStick
+    gm: 37
+    colour: yellow
+    ssd5: Snare Sidestick
+  hat-closed:
+    label: Hat Closed
+    short: HHatC
+    gm: 42
+    colour: teal
+    ssd5: Hi-Hat Tip Closed Tight
+  hat-open:
+    label: Hat Open
+    short: HHatO
+    gm: 46
+    colour: cyan
+    ssd5: Hi-Hat Shank Open 1
+  tom-rack-1:
+    label: Rack Tom 1
+    short: RTom1
+    gm: 48
+    colour: green
+    ssd5: Rack Tom 1 Center
+  tom-rack-2:
+    label: Rack Tom 2
+    short: RTom2
+    gm: 47
+    colour: lime
+    ssd5: Rack Tom 2 Center
+  tom-floor-1:
+    label: Floor Tom 1
+    short: FTom1
+    gm: 45
+    colour: sea-green
+    ssd5: Floor Tom 1 Center
+  tom-floor-2:
+    label: Floor Tom 2
+    short: FTom2
+    gm: 43
+    colour: light-green
+    ssd5: Floor Tom 2 Center
+  crash-1:
+    label: Crash 1
+    short: Crash1
+    gm: 49
+    colour: dodger-blue
+    ssd5: Crash Left Edge
+  crash-2:
+    label: Crash 2
+    short: Crash2
+    gm: 57
+    colour: blue
+    ssd5: Crash Right Edge
+  ride-bow:
+    label: Ride Bow
+    short: RBow
+    gm: 51
+    colour: violet
+    ssd5: Ride Bow Shank
+  ride-bell:
+    label: Ride Bell
+    short: RBell
+    gm: 53
+    colour: magenta
+    ssd5: Ride Bell
+
+# Pad 1 is bottom-left and the notes run left to right, bottom row to top, so
+# the kit reads from the bottom up: kick and snare under the fingers, hats
+# beside them, toms across the middle, cymbals along the top.
+#
+# `same_as` marks a pad that plays an earlier pad's role on purpose. Both pads
+# get the same sound in every generated kit, which is what keeps this layout
+# interchangeable with SSD5's.
+pads:
+  - {pad: 1,  note: 36, role: kick, articulation: main, label: Kick1}
+  - {pad: 2,  note: 37, role: snare}
+  - {pad: 3,  note: 38, role: hat-closed, articulation: main, label: HHatC}
+  - {pad: 4,  note: 39, role: hat-closed, same_as: 3, articulation: alt, label: HHatCF}
+  - {pad: 5,  note: 40, role: kick, same_as: 1, articulation: alt, label: Kick2}
+  - {pad: 6,  note: 41, role: snare-rimshot}
+  - {pad: 7,  note: 42, role: snare-sidestick}
+  - {pad: 8,  note: 43, role: hat-open}
+  - {pad: 9,  note: 44, role: tom-rack-1}
+  - {pad: 10, note: 45, role: tom-rack-2}
+  - {pad: 11, note: 46, role: tom-floor-1}
+  - {pad: 12, note: 47, role: tom-floor-2}
+  - {pad: 13, note: 48, role: crash-1}
+  - {pad: 14, note: 49, role: crash-2}
+  - {pad: 15, note: 50, role: ride-bow}
+  - {pad: 16, note: 51, role: ride-bell}

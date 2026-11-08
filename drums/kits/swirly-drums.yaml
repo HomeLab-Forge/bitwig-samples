@@ -1,0 +1,89 @@
+# Swirly Drums by Karoryfer Samples (CC0), as a core16 kit. Built by
+# tools/sfzkit.py from the kit's own SFZ program; see ../README.md.
+#
+# Played the way it loads: close mics with the kit's default ambience, every
+# tuning control centred. `cc:` changes one for the whole kit, a role's `cc:`
+# for that pad only.
+
+name: swirly-drums
+title: Swirly Drums
+description: Brushes and sticks kit with stirs, five toms and broken cymbals
+creator: Karoryfer Samples
+licence: CC0-1.0
+source: sfz
+content_root: ~/Samples/SFZ/Swirly Drums
+program: Programs/Full_kit.sfz
+
+# For the Drum Machine preset (tools/drumkit.py), set up the way Bitwig's
+# own acoustic kits are (Acoustic Drums Kit Yamaha): 12 voices a pad, so a
+# re-hit rings over the last one, and only the hi-hat chokes: any closed hat
+# cuts the open one, never the other way round.
+voices: 12
+chokes:
+  - {from: [hat-closed], to: [hat-open]}
+
+roles:
+  # Where a drum is on several pads (both banks double the kick, snare and
+  # closed hat), the pads take the main articulation and `alt` in turn, so
+  # the two in one bank sound different.
+  kick: {key: 36, alt: {key: 35, name: cajon, short: cj}}
+  snare: {key: 38, alt: {key: 40, name: edge, short: ed}}
+  # The kit has no rimshot and no sidestick; Frankensnare's 14x8" aluminium
+  # snare and 14x5" maple play them. The stirs and flutters (60-64) swell in
+  # over 0.3 s and make poor pads.
+  # `own:` plays in the public preset, which carries Swirly's sounds only.
+  snare-rimshot: {key: 38, from: frankensnare-14x8al-rims, own: 40}
+  snare-sidestick: {key: 37, from: frankensnare-14x5maple, own: 39}
+  # Key 46 runs closed to open on the hi-hat openness CC (4), which the
+  # program leaves at 0: closed. The open hat is the same key fully open.
+  hat-closed: {key: 46, alt: {key: 42, name: tight, short: t}}
+  hat-open: {key: 46, cc: {4: 127}}
+  # Five toms; the four used step down 10", 12", 13", 16". The 8" (48) is
+  # left out.
+  tom-rack-1: {key: 47}
+  tom-rack-2: {key: 45}
+  tom-floor-1: {key: 43}
+  tom-floor-2: {key: 41}
+  crash-1: {key: 49}
+  crash-2: {key: 57}
+  ride-bow: {key: 51}
+  # No ride bell in the kit; the cowbell stands in, as in bitwig-acoustic.
+  ride-bell: {key: 66, substitute: cowbell}
+  # Bank B only (core16-bank-b).
+  china: {key: 53}
+
+# Names for `sfzkit.py full`, for the notes the roles above leave unnamed or
+# name after a pad. The program itself names no keys.
+names:
+  35: Kick Cajon
+  36: Kick
+  38: Snare
+  39: Snare Dig
+  40: Snare Edge
+  41: Tom Floor 2
+  42: Hi-hat Closed Tight
+  43: Tom Floor 1
+  44: Hi-hat Foot
+  45: Tom Rack 2
+  46: Hi-hat
+  47: Tom Rack 1
+  48: Tom Very High
+  49: Crash 1
+  51: Ride Bow
+  53: China
+  54: Hi-hat Foot Splash
+  55: Splash
+  57: Crash 2
+  59: Splash Broken
+  60: Snare Stir Long
+  61: Snare Flutter Long
+  63: Snare Flutter Short
+  64: Snare Stir Short
+  65: Djembe
+  66: Ride Bell
+  69: Bongo Low
+  70: Darbouka
+  71: Bongo High
+  72: Kick Pedal
+  74: Snare Dig Release
+  78: Pedal Return

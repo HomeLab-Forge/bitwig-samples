@@ -1,0 +1,12 @@
+# The Hat With The Phat by Karoryfer Samples (CC0): an oversized hi-hat made
+# of two 20" ride cymbals. Not a kit: other kits take their hi-hat from it
+# (`from: the-hat-with-the-phat`; 42 closed, 44 foot chik, 46 open).
+
+name: the-hat-with-the-phat
+title: The Hat With The Phat
+creator: Karoryfer Samples
+licence: CC0-1.0
+source: sfz
+content_root: ~/Samples/SFZ/The Hat With The Phat
+program: Programs/02-basic.sfz
+roles: {}

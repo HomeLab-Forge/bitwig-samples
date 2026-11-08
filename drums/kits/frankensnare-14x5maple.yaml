@@ -1,0 +1,12 @@
+# Frankensnare by Karoryfer Samples (CC0): the 14x5" maple snare. Not a kit:
+# other kits take their sidestick from it (`from: frankensnare-14x5maple`,
+# key 37) where they have none of their own.
+
+name: frankensnare-14x5maple
+title: Frankensnare
+creator: Karoryfer Samples
+licence: CC0-1.0
+source: sfz
+content_root: ~/Samples/SFZ/Frankensnare
+program: Programs/06-14x5maple.sfz
+roles: {}

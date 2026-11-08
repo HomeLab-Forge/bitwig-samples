@@ -1,0 +1,12 @@
+# Frankensnare by Karoryfer Samples (CC0): the 14x8" aluminium snare's
+# rimshots program. Not a kit: other kits take their rimshot from it
+# (`from: frankensnare-14x8al-rims`, key 38) where they have none of their own.
+
+name: frankensnare-14x8al-rims
+title: Frankensnare
+creator: Karoryfer Samples
+licence: CC0-1.0
+source: sfz
+content_root: ~/Samples/SFZ/Frankensnare
+program: Programs/10-14x8alrims.sfz
+roles: {}

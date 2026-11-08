@@ -1,0 +1,46 @@
+# DRSKit by the DrumGizmo team and Jes Eiler of DRSDrums (CC-BY-4.0: credit
+# Lars Muldjord, Bent Bisballe Nyeng, DRSDrums), as a core16 kit, from the
+# sfzinstruments SFZ port by kinwie. Built by tools/sfzkit.py; see ../README.md.
+#
+# Played the way it loads: the stereo program, every mic at its default.
+
+name: drs-kit
+title: DRS Kit
+description: Handmade DRSDrums kit with Paiste 602 cymbals, DrumGizmo recording
+creator: DrumGizmo, DRSDrums
+licence: CC-BY-4.0
+source: sfz
+content_root: ~/Samples/SFZ/DRS Kit
+program: DrumGizmo/DRSKit/Stereo/DrumGizmo DRSKit.sfz
+
+# For the Drum Machine preset (tools/drumkit.py), set up the way Bitwig's
+# own acoustic kits are (Acoustic Drums Kit Yamaha): 12 voices a pad, so a
+# re-hit rings over the last one, and only the hi-hat chokes: any closed hat
+# cuts the open one, never the other way round.
+voices: 12
+chokes:
+  - {from: [hat-closed], to: [hat-open]}
+
+roles:
+  # Where a drum is on several pads (both banks double the kick, snare and
+  # closed hat), the pads take the main articulation and `alt` in turn.
+  kick: {key: 36, alt: {key: 35, name: no contact, short: nc}}
+  snare: {key: 38}
+  snare-rimshot: {key: 37}
+  # "Rest": the stick laid on the head, the cross-stick.
+  snare-sidestick: {key: 40}
+  hat-closed: {key: 56, alt: {key: 42, name: shank, short: sh}}
+  hat-open: {key: 58}
+  # One rack tom and two floor toms. The second rack tom is the first three
+  # semitones down.
+  tom-rack-1: {key: 47}
+  tom-rack-2: {key: 47, tune: -300}
+  tom-floor-1: {key: 43}
+  tom-floor-2: {key: 41}
+  crash-1: {key: 54}
+  crash-2: {key: 55}
+  ride-bow: {key: 51}
+  ride-bell: {key: 53}
+  # Bank B only (core16-bank-b). No china: the left crash on its shank
+  # stands in.
+  china: {key: 49, substitute: crash shank}
