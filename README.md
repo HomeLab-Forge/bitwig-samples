@@ -16,8 +16,8 @@ control.
 ## Releases
 
 One library per release, tagged `bitwig-samples-<slug>-v<version>` and
-titled `Audio Rig: <slug> [<kind>]`, for example `bitwig-samples-swirly-drums-v1.0`,
-`Audio Rig: swirly-drums [Drums]`. Each release page lists the original kit, its
+titled `Audio Rig: <Library>`, for example `bitwig-samples-swirly-drums-v1.0`,
+`Audio Rig: Swirly Drums`. Each release page lists the original kit, its
 authors and licence, how the port differs from the original, and every file
 with its notes, velocity layers and round robins.
 
