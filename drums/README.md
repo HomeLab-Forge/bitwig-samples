@@ -6,10 +6,11 @@ the version here at its tag.
 
 | Path | What it is |
 |---|---|
-| `tools/sfzkit.py` | Reads an SFZ program at its defaults and writes Bitwig `.multisample` files. |
+| `tools/sfzkit.py` | The drum front end: plays a kit's program at its defaults and writes Bitwig `.multisample` files. |
 | `tools/drumkit.py` | Builds a Drum Machine `.bwpreset` from them. |
-| `tools/bitwigdoc.py` | Reads and writes Bitwig's preset format, which `drumkit.py` uses. |
 | `tools/drumlayout.py` | Loads kit and layout files. |
+| [`../tools/sfz.py`](../tools/sfz.py) | The SFZ engine underneath, not drum-specific. |
+| [`../tools/bitwigdoc.py`](../tools/bitwigdoc.py) | Reads and writes Bitwig's preset format, for any device. |
 | `kits/*.yaml` | One per library: its program, names for its notes, its roles on the pads. |
 | `layouts/core16-bank-*.yaml` | The two 16-pad banks the presets' first two pages play. |
 

@@ -3,7 +3,7 @@
 Free sample libraries ported to Bitwig Studio's `.multisample` format, starting
 with acoustic drum kits made from SFZ libraries. Each library is its own
 release; this repository holds this guide and the tools. The drum ports are made by
-the tools in [`drums/`](drums/) (MIT, see [LICENSE](LICENSE)) from
+the tools in [`drums/`](drums/) and [`tools/`](tools/) (MIT, see [LICENSE](LICENSE)) from
 each library's own SFZ program at its default settings.
 
 This is not an official Bitwig project and is not affiliated with Bitwig GmbH.
