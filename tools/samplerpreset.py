@@ -98,7 +98,9 @@ def read_multisample(path):
                 "root": int(key.get("root", key.get("low"))),
                 "track": 0.0 if track == "false" else
                          1.0 if track == "true" else float(track),
-                "vel": (int(vel.get("low", 1)), int(vel.get("high", 127))),
+                # Bitwig refuses to load a zone outside 1-127.
+                "vel": (max(1, int(vel.get("low", 1))),
+                        min(127, max(1, int(vel.get("high", 127))))),
                 "loop": (mode, float(loop.get("start", 0)) if mode != "off" else 0,
                          float(loop.get("stop", 0)) if mode != "off" else 0,
                          float(loop.get("fade", 0)) if mode != "off" else 0)})
