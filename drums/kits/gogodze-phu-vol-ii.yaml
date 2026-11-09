@@ -48,3 +48,8 @@ roles:
   ride-bell: {key: 53, from: big-rusty-drums}
   # Bank B only (core16-bank-b).
   china: {key: 57, from: big-rusty-drums}
+
+# Names for `sfzkit.py full` where the roles above read oddly.
+names:
+  44: Hi-hat Foot
+  46: Hi-hat
