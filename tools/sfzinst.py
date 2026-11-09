@@ -15,7 +15,9 @@ the whole set then by one amount so the loudest peaks at --peak dBFS, and a
 zone keeps only what is left, never above 0 dB. Levels between zones stay as
 the program has them. The files are written as 24-bit wav.
 
-Not carried over, because a .multisample has no field for them: the amp
+Round robins keep their first take only (a zone cannot choose among takes,
+so they would all sound together). Not carried over, because a .multisample
+has no field for them: the amp
 envelope (set the Sampler's release to the program's `ampeg_release`, which
 is printed), velocity tracking, filters, and a ping-pong loop, which plays as
 a forward loop with the program's crossfade.
@@ -29,7 +31,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from sfz import Evaluator, Program, audio, die, note_number, warn  # noqa: E402
+from sfz import Evaluator, Program, audio, die, leading_number, note_number, warn  # noqa: E402
 
 
 def zones(program):
@@ -40,6 +42,15 @@ def zones(program):
         if "sample" not in region or region["sample"].startswith("*"):
             continue
         if not ev.gated(region):
+            continue
+        # One take per note: a round robin's takes would all play at once,
+        # since a zone cannot pick among them. The first step of a
+        # sequence, and the take a random pick of 0 lands on.
+        if int(leading_number(region.get("seq_length", 1))) > 1 and \
+                int(leading_number(region.get("seq_position", 1))) != 1:
+            continue
+        if not (leading_number(region.get("lorand", 0)) <= 0
+                < leading_number(region.get("hirand", 1))):
             continue
         lo, hi, root = ev.keys(region)
         path = os.path.normpath(os.path.join(
@@ -79,9 +90,13 @@ def main(argv=None):
         info = sf.info(path)
         name = os.path.splitext(os.path.basename(path))[0] + ".wav"
         if name in files and files[name][0] != path:
-            die(f"two samples named {name}")
+            # The same name in another folder: the folder goes in front.
+            name = os.path.basename(os.path.dirname(path)) + " " + name
+            if name in files and files[name][0] != path:
+                die(f"two samples named {name}")
         start = float(r.get("offset", 0))
-        stop = float(r.get("end", info.frames - 1)) + 1
+        # Some programs set `end` to the length, one past the last frame.
+        stop = min(float(r.get("end", info.frames - 1)) + 1, info.frames)
         gain = float(r.get("volume", 0))
         amplitude = float(r.get("amplitude", 100)) / 100
         if amplitude <= 0:
@@ -97,9 +112,11 @@ def main(argv=None):
         ET.SubElement(node, "key", {
             "low": str(lo), "high": str(hi), "root": str(root),
             "track": f"{track:.4f}"})
+        # SFZ allows a velocity of 0 (VCSL starts its layers there); Bitwig
+        # refuses to load a zone outside 1-127.
         ET.SubElement(node, "velocity", {
-            "low": str(int(float(r.get("lovel", 1)))),
-            "high": str(int(float(r.get("hivel", 127))))})
+            "low": str(max(1, int(float(r.get("lovel", 1))))),
+            "high": str(min(127, max(1, int(float(r.get("hivel", 127))))))})
         mode = r.get("loop_mode", "no_loop")
         if mode in ("loop_sustain", "loop_continuous") and "loop_start" in r:
             ls, le = float(r["loop_start"]), float(r["loop_end"]) + 1
