@@ -13,13 +13,33 @@ links to it. Bitwig cannot load SFZ, which is the only reason these ports
 exist: an SFZ player gets more from the original, with every microphone and
 control.
 
+## Kits
+
+Each kit's newest release is linked from its name; *all versions* lists every release of that kit, newest first.
+
+| Kit | By | Licence | Sounds | Preset | Single sounds |
+|---|---|---|---|---|---|
+| [Big Rusty Drums](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-big-rusty-drums-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-big-rusty-drums&expanded=true)) | Karoryfer Samples | CC0 | 71 | 806 MB | 3.1 GB |
+| [DRS Kit](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-drs-kit-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-drs-kit&expanded=true)) | DrumGizmo, DRSDrums; SFZ by kinwie | CC BY 4.0 | 35 | 244 MB | 557 MB |
+| [Gogodze Phu Vol II](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-gogodze-phu-vol-ii-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-gogodze-phu-vol-ii&expanded=true)) | Karoryfer Samples | CC0 | 13 | 130 MB | 242 MB |
+| [Muldjord Kit](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-muldjord-kit-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-muldjord-kit&expanded=true)) | Lars Muldjord / DrumGizmo; SFZ by kinwie | CC BY 4.0 | 17 | 121 MB | 289 MB |
+| [Naked Drums](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-naked-drums-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-naked-drums&expanded=true)) | Wilkinson Audio | CC BY 4.0 | 24 | 477 MB | 1.2 GB |
+| [Salamander Drumkit](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-salamander-drumkit-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-salamander-drumkit&expanded=true)) | Alexander Holm | CC BY-SA 3.0 | 30 | 374 MB | 871 MB |
+| [SM Drums](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-sm-drums-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-sm-drums&expanded=true)) | Scott McLean, Tod Stillwell, Suleiman Ali | public domain | 29 | build it¹ | 3.6 GB |
+| [Swirly Drums](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-swirly-drums-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-swirly-drums&expanded=true)) | Karoryfer Samples | CC0 | 36 | 718 MB | 1.8 GB |
+| [Unruly Drums](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-unruly-drums-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-unruly-drums&expanded=true)) | Karoryfer Samples | CC0 | 70 | 718 MB | 2.9 GB |
+| [Virtuosity Drums](https://github.com/HomeLab-Forge/bitwig-samples/releases/tag/bitwig-samples-virtuosity-drums-v1.0) ([all versions](https://github.com/HomeLab-Forge/bitwig-samples/releases?q=bitwig-samples-virtuosity-drums&expanded=true)) | Versilian Studios, Karoryfer | CC0 | 74 | 511 MB | 1.4 GB |
+
+¹ Over GitHub's 2 GB limit per file; the release says how to build it.
+
 ## Releases
 
 One library per release, tagged `bitwig-samples-<slug>-v<version>` and
 titled `Bitwig <Library>`, for example `bitwig-samples-swirly-drums-v1.0`,
 `Bitwig Swirly Drums`. Each release page lists the original kit, its
 authors and licence, how the port differs from the original, and every file
-with its notes, velocity layers and round robins.
+with its notes, velocity layers and round robins. A new version of a kit
+moves its row in [Kits](#kits) to the new release, in the same change.
 
 A port carries the licence of the kit it was made from. Most kits are CC0 or
 public domain; some are CC BY 4.0 or CC BY-SA 3.0, which ask for credit (the
