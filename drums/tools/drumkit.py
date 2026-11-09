@@ -311,19 +311,6 @@ def full_layout(pads, kit, start=36):
     return layout
 
 
-def scrub(data, zip_len):
-    """The owner's account and home folder out of the document part, each
-    replaced by a placeholder of the same length so no length field moves.
-    The embedded samples (the last zip_len bytes) are left alone."""
-    head, tail = data[:len(data) - zip_len], data[len(data) - zip_len:]
-    head = re.sub(rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]+",
-                  lambda m: b"x" * (len(m.group(0)) - 12) + b"@example.com"
-                  if len(m.group(0)) > 12 else m.group(0), head)
-    head = re.sub(rb"/home/[^/\x00-\x1f]+",
-                  lambda m: b"/home/" + b"x" * (len(m.group(0)) - 6), head)
-    return head + tail
-
-
 def build(reference, pads_dir, kit, layout, installed, full=False,
           banks=None, bank_layout=None):
     ref = Reference(reference)
@@ -387,7 +374,7 @@ def build(reference, pads_dir, kit, layout, installed, full=False,
             zf.writestr(f"multi-samples/{pad.file}", pad.data)
     data = ref.doc.to_bytes(archive.getvalue())
     if full:
-        data = scrub(data, len(archive.getvalue()))
+        data = bw.scrub(data, len(archive.getvalue()))
     return data, len(built), len(chokes)
 
 

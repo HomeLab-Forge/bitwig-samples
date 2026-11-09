@@ -18,6 +18,7 @@ earlier one is either a field of type REF holding its number, or, where an
 object is expected, the class id 1 followed by the number.
 """
 
+import re
 import struct
 
 INT8, INT16, INT32, BOOL, FLOAT, DOUBLE, STRING = 0x01, 0x02, 0x03, 0x05, 0x06, 0x07, 0x08
@@ -246,3 +247,16 @@ def clone(o, memo=None):
             v = [clone(item, memo) for item in v]
         n.fields.append([fid, t, v])
     return n
+
+
+def scrub(data, zip_len):
+    """The owner's account and home folder out of the document part, each
+    replaced by a placeholder of the same length so no length field moves.
+    The embedded samples (the last zip_len bytes) are left alone."""
+    head, tail = data[:len(data) - zip_len], data[len(data) - zip_len:]
+    head = re.sub(rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]+",
+                  lambda m: b"x" * (len(m.group(0)) - 12) + b"@example.com"
+                  if len(m.group(0)) > 12 else m.group(0), head)
+    head = re.sub(rb"/home/[^/\x00-\x1f]+",
+                  lambda m: b"/home/" + b"x" * (len(m.group(0)) - 6), head)
+    return head + tail
