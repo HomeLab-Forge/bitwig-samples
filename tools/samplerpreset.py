@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """Turn .multisample files into Bitwig Sampler presets, one each, samples inside.
 
-    ./samplerpreset.py --reference sampler_ref.bwpreset -o out/ pads/*.multisample
+    ./samplerpreset.py -o out/ pads/*.multisample
 
 Bitwig's preset format has no documentation, so nothing is written from
-scratch: each preset is the reference with its .multisample swapped. The
-reference is a Sampler preset saved in Bitwig with any .multisample loaded,
-the envelope and the rest of the device set the way every preset should have
-them. Bitwig keeps a copy of each zone in the document as well as in the
-embedded file, so the zones are rebuilt from the new file's multisample.xml
-in the reference's shape.
+scratch: each preset is a template with its .multisample swapped in. Bitwig
+keeps a copy of each zone in the document as well as in the embedded file,
+so the zones are rebuilt from the new file's multisample.xml in the
+template's shape.
 
-The reference holds the owner's Bitwig account and home folder in its file
-references, so it stays out of this repository, and both are replaced in
-every preset written (see bitwigdoc.scrub).
+The template, templates/sampler.bwpreset, is a Sampler preset Bitwig 6.1
+saved, cut to two blank zones, with the account, machine and paths taken
+out. --reference takes a Sampler preset of your own instead, to carry its
+envelope and other settings; a preset Bitwig saved holds your Bitwig account
+and home folder, and both are replaced in every preset written (see
+bitwigdoc.scrub).
 """
 
 import argparse
@@ -49,6 +50,8 @@ SRC_NAME, SRC_PATH, SRC_ORIGIN, SRC_HASH, SRC_SIZE, SRC_FILES = (
 ORIGIN_PATH, HASH_MD5 = 0x003B, 0x0016
 MS_CATEGORY, MS_CREATOR, MS_DESCRIPTION = 0x0FB4, 0x0FB5, 0x0FB7
 FILE_REFERENCES = 0x1422
+# The same metadata again, on the document's preset object.
+P_CATEGORY, P_CREATOR, P_DESCRIPTION, P_PRESET_CATEGORY = 0x009C, 0x009E, 0x009F, 0x00A1
 # The preset's own metadata, in the block before the document.
 META = {"comment": "description", "creator": "creator",
         "device_category": "category", "preset_category": "category"}
@@ -183,6 +186,11 @@ def build(reference, path, installed):
     for o in doc.objects:
         if o.field(PRESET_NAME) is not None:
             o.set(PRESET_NAME, bw.string(title))
+            for fid, key in ((P_CATEGORY, "category"), (P_CREATOR, "creator"),
+                             (P_DESCRIPTION, "description"),
+                             (P_PRESET_CATEGORY, "category")):
+                if o.field(fid) is not None:
+                    o.set(fid, bw.string(meta[key]))
     # The document lists every embedded file's reference object, and refuses
     # anything else in it.
     doc.root.set(FILE_REFERENCES, [bw.Ref(source)])
@@ -204,8 +212,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("multisample", nargs="+")
-    parser.add_argument("--reference", required=True,
-                        help="a Sampler preset saved in Bitwig, see above")
+    parser.add_argument("--reference", default=os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "templates", "sampler.bwpreset"),
+        help="a Sampler preset saved in Bitwig, see above (default: the template)")
     parser.add_argument("-o", "--output", required=True)
     parser.add_argument("--installed", default=os.path.expanduser(
         "~/Bitwig Studio/Library/Multisamples/audio-rig"),
