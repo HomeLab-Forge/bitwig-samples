@@ -144,6 +144,16 @@ voice count.
     -o "out/Big Rusty Drums.bwpreset"
 ```
 
+Every kit also gets a tone control, from [`../tools/tone.py`](../tools/tone.py):
+each pad's Sampler has a 4-pole low-pass at about 10 kHz, which a hit at full
+velocity opens fully, and the Drum Machine has a **Perform** remote page whose
+**Mod Tone** is the first pad's cutoff. A remote control reaches one parameter,
+and Bitwig's "Copy Value to All Layers" copies once rather than linking, so
+the BW_AKAI controller script ([audio-rig](https://github.com/HomeLab-Forge/audio-rig),
+`lib/drumtone.js`) copies Mod Tone to every pad's cutoff, and drives it from the
+mod wheel in its Device mod macro mode. Without that script, Mod Tone moves the
+first pad only. `--no-tone` leaves all of it out.
+
 Bitwig's format is undocumented. [`../tools/bitwigdoc.py`](../tools/bitwigdoc.py) reads
 and writes it, worked out from presets Bitwig 6.1 saved and checked by writing
 them back byte for byte. [`tools/drumkit.py`](tools/drumkit.py) does not build a
