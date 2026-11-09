@@ -489,7 +489,9 @@ def program_labels(program):
 
 MIC_WORDS = {"top", "btm", "bottom", "oh", "cl", "close", "room", "amb",
              "ambience", "kick", "snare", "front", "back", "in", "out",
-             "mono", "stereo", "left", "right"}
+             "mono", "stereo", "left", "right", "ambl", "ambr", "ambm",
+             # dynamics in a file name: Salamander's "Ride2 FF"
+             "pp", "p", "mp", "mf", "f", "ff", "fff"}
 
 
 def guessed_names(program, notes):
@@ -619,11 +621,17 @@ def target_full(args, layout):
                 cc = dict(base)
                 cc[number] = value
                 name = names.get(note, f"Note {note}")
+                label = program.labels.get(number, f"CC{number}")
                 # "Hi-hat" and "Hi-hat openness" make "Hi-hat Openness 64".
-                what = " ".join(w.title() for w in program.labels.get(
-                    number, f"CC{number}").split()
-                    if w.lower() not in name.lower().split())
-                wanted.append((note, f"{name} {what} {value:g}", cc))
+                what = " ".join(w.title() for w in label.split()
+                                if w.lower() not in name.lower().split())
+                if len(states) == 1:
+                    # An on/off control: "Snare, Snares Off".
+                    state = f"{name}, {label.title()}" if what else \
+                        f"{name}, CC{number} {value:g}"
+                else:
+                    state = " ".join(x for x in (name, what, f"{value:g}") if x)
+                wanted.append((note, state, cc))
 
     mixer, rows, kit_zones, wavs = Mixer(), [], [], {}
     mixed = {}  # what a hit plays -> its wav, so an alias note reuses it

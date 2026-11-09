@@ -47,3 +47,15 @@ roles:
   ride-bell: {key: 53}
   # Bank B only (core16-bank-b).
   china: {key: 50}
+
+# Names for `sfzkit.py full`, from the program's keymap (Data/keymap.txt);
+# its sample files are named by mic and a hash.
+names:
+  44: Hi-hat Pedal
+  46: Hi-hat Half Open
+  48: Tom 1
+  52: China 2
+  54: Splash 1
+  56: Splash 2
+  58: Crash 1 Bell
+  59: Crash 2 Bell
