@@ -6,8 +6,14 @@
 Unlike the drum front end, nothing is mixed or retuned: each region the
 program plays at its defaults becomes one Sampler zone over the same keys,
 with its root note, velocity range, gain, tune, start, end and sustain loop,
-and Bitwig pitches it across the keys as the SFZ player would. The sample
-files are copied as they are.
+and Bitwig pitches it across the keys as the SFZ player would.
+
+The program's gain is written into the samples rather than left to the zone,
+because SFZ programs lean on positive volume (+8 dB is common) and a Sampler
+zone plays them quiet. Each file is raised by the most any of its zones asks,
+the whole set then by one amount so the loudest peaks at --peak dBFS, and a
+zone keeps only what is left, never above 0 dB. Levels between zones stay as
+the program has them. The files are written as 24-bit wav.
 
 Not carried over, because a .multisample has no field for them: the amp
 envelope (set the Sampler's release to the program's `ampeg_release`, which
@@ -16,6 +22,7 @@ a forward loop with the program's crossfade.
 """
 
 import argparse
+import io
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -50,6 +57,8 @@ def main(argv=None):
     parser.add_argument("--title")
     parser.add_argument("--creator", default="")
     parser.add_argument("--category", default="Synth")
+    parser.add_argument("--peak", type=float, default=-1.0,
+                        help="dBFS the loudest sample peaks at (default -1)")
     args = parser.parse_args(argv)
     np, sf = audio()
     program = Program(args.program)
@@ -65,13 +74,12 @@ def main(argv=None):
         f"{title}, from {os.path.basename(args.program)} at its defaults.")
     ET.SubElement(root_el, "keywords")
     layer = ET.SubElement(root_el, "layer", {"name": "Default"})
-    files, releases = {}, set()
+    files, releases, nodes = {}, set(), []
     for path, r, lo, hi, root in found:
         info = sf.info(path)
-        name = os.path.basename(path)
-        if name in files and files[name] != path:
+        name = os.path.splitext(os.path.basename(path))[0] + ".wav"
+        if name in files and files[name][0] != path:
             die(f"two samples named {name}")
-        files[name] = path
         start = float(r.get("offset", 0))
         stop = float(r.get("end", info.frames - 1)) + 1
         gain = float(r.get("volume", 0))
@@ -79,12 +87,13 @@ def main(argv=None):
         if amplitude <= 0:
             continue
         gain += 20 * np.log10(amplitude)
+        files[name] = (path, max(gain, files.get(name, (path, gain))[1]))
         tune = float(r.get("tune", 0)) / 100 + float(r.get("transpose", 0))
         track = float(r.get("pitch_keytrack", 100)) / 100
         node = ET.SubElement(layer, "sample", {
-            "file": name, "gain": f"{gain:.3f}",
-            "sample-start": f"{start:.3f}", "sample-stop": f"{stop:.3f}",
-            "tune": f"{tune:.2f}"})
+            "file": name, "sample-start": f"{start:.3f}",
+            "sample-stop": f"{stop:.3f}", "tune": f"{tune:.2f}"})
+        nodes.append((node, name, gain))
         ET.SubElement(node, "key", {
             "low": str(lo), "high": str(hi), "root": str(root),
             "track": f"{track:.4f}"})
@@ -105,16 +114,31 @@ def main(argv=None):
         else:
             ET.SubElement(node, "loop", {"mode": "off"})
         releases.add(float(r.get("ampeg_release", 0)))
+    audio_by_name, loudest = {}, 0.0
+    for name, (path, gain) in files.items():
+        data, rate = sf.read(path, dtype="float64", always_2d=True)
+        data *= 10 ** (gain / 20)
+        audio_by_name[name] = (data, rate)
+        loudest = max(loudest, float(np.abs(data).max()))
+    if loudest <= 0:
+        die(f"{args.program}: every sample is silent")
+    lift = 10 ** (args.peak / 20) / loudest
+    for node, name, gain in nodes:
+        node.set("gain", f"{gain - files[name][1]:.3f}")
     ET.indent(root_el, space="   ")
     os.makedirs(args.output, exist_ok=True)
     out = os.path.join(args.output, f"{title}.multisample")
     with zipfile.ZipFile(out, "w", zipfile.ZIP_STORED) as zf:
-        for name, path in sorted(files.items()):
-            zf.write(path, name)
+        for name in sorted(files):
+            data, rate = audio_by_name[name]
+            buf = io.BytesIO()
+            sf.write(buf, data * lift, rate, subtype="PCM_24", format="WAV")
+            zf.writestr(name, buf.getvalue())
         zf.writestr("multisample.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
                     + ET.tostring(root_el, encoding="unicode") + "\n")
     print(f"wrote {out}: {len(found)} zones, {len(files)} samples, "
-          f"{os.path.getsize(out) // (1 << 20)} MiB, release "
+          f"{os.path.getsize(out) // (1 << 20)} MiB, raised "
+          f"{20 * np.log10(lift):+.1f} dB, release "
           f"{', '.join(f'{x:g}' for x in sorted(releases))} s")
 
 
