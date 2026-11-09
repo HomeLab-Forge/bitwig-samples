@@ -84,7 +84,8 @@ def main(argv=None):
             if name in files and files[name][0] != path:
                 die(f"two samples named {name}")
         start = float(r.get("offset", 0))
-        stop = float(r.get("end", info.frames - 1)) + 1
+        # Some programs set `end` to the length, one past the last frame.
+        stop = min(float(r.get("end", info.frames - 1)) + 1, info.frames)
         gain = float(r.get("volume", 0))
         amplitude = float(r.get("amplitude", 100)) / 100
         if amplitude <= 0:
