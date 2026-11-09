@@ -79,7 +79,10 @@ def main(argv=None):
         info = sf.info(path)
         name = os.path.splitext(os.path.basename(path))[0] + ".wav"
         if name in files and files[name][0] != path:
-            die(f"two samples named {name}")
+            # The same name in another folder: the folder goes in front.
+            name = os.path.basename(os.path.dirname(path)) + " " + name
+            if name in files and files[name][0] != path:
+                die(f"two samples named {name}")
         start = float(r.get("offset", 0))
         stop = float(r.get("end", info.frames - 1)) + 1
         gain = float(r.get("volume", 0))
