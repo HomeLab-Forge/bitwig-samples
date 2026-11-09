@@ -100,9 +100,11 @@ def main(argv=None):
         ET.SubElement(node, "key", {
             "low": str(lo), "high": str(hi), "root": str(root),
             "track": f"{track:.4f}"})
+        # SFZ allows a velocity of 0 (VCSL starts its layers there); Bitwig
+        # refuses to load a zone outside 1-127.
         ET.SubElement(node, "velocity", {
-            "low": str(int(float(r.get("lovel", 1)))),
-            "high": str(int(float(r.get("hivel", 127))))})
+            "low": str(max(1, int(float(r.get("lovel", 1))))),
+            "high": str(min(127, max(1, int(float(r.get("hivel", 127))))))})
         mode = r.get("loop_mode", "no_loop")
         if mode in ("loop_sustain", "loop_continuous") and "loop_start" in r:
             ls, le = float(r["loop_start"]), float(r["loop_end"]) + 1
