@@ -13,9 +13,12 @@ links to it. Bitwig cannot load SFZ, which is the only reason these ports
 exist: an SFZ player gets more from the original, with every microphone and
 control.
 
-## Kits
+## Libraries
 
-Each kit's newest release is linked from its name; *all versions* lists every release of that kit, newest first.
+Each library's newest release is linked from its name; *all versions* lists
+every release of it, newest first. Drum kits so far; pianos and synths are next.
+
+### Drums
 
 | Kit | By | Licence | Sounds | Preset | Single sounds |
 |---|---|---|---|---|---|
@@ -38,8 +41,8 @@ One library per release, tagged `bitwig-samples-<slug>-v<version>` and
 titled `Bitwig <Library>`, for example `bitwig-samples-swirly-drums-v1.0`,
 `Bitwig Swirly Drums`. Each release page lists the original kit, its
 authors and licence, how the port differs from the original, and every file
-with its notes, velocity layers and round robins. A new version of a kit
-moves its row in [Kits](#kits) to the new release, in the same change.
+with its notes, velocity layers and round robins. A new version of a library
+moves its row in [Libraries](#libraries) to the new release, in the same change.
 
 A port carries the licence of the kit it was made from. Most kits are CC0 or
 public domain; some are CC BY 4.0 or CC BY-SA 3.0, which ask for credit (the
