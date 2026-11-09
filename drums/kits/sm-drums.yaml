@@ -42,3 +42,19 @@ roles:
   ride-bell: {key: 63}
   # Bank B only (core16-bank-b).
   china: {key: 58}
+
+# Names for `sfzkit.py full`, from the sample names; the program names no
+# keys and its folders all start "SMD ... Stereo (Samples)".
+names:
+  41: Snare 65 NR Hybrid
+  44: Hi-hat Loose
+  49: Hi-hat Foot Open
+  51: Hi-hat Closed Open
+  52: Snare 65 NR
+  53: Snare 67 NR
+  54: Crash 13in
+  56: Crash 16in
+  60: Ride 17in Tip
+  61: Ride 17in Bell
+  64: Snare 65
+  65: Snare 65 Rimshot
