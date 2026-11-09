@@ -487,32 +487,57 @@ def program_labels(program):
     return seen.items()
 
 
+MIC_WORDS = {"top", "btm", "bottom", "oh", "cl", "close", "room", "amb",
+             "ambience", "kick", "snare", "front", "back", "in", "out",
+             "mono", "stereo", "left", "right"}
+
+
 def guessed_names(program, notes):
     """Names for notes the kit file and the program leave unnamed, from the
-    recordings: their folder, or the file name when one folder holds several
-    sounds (Swirly's mech_noises)."""
+    recordings: the drum's folder (the first one under the samples' root)
+    and what the file name adds to it, leaving out microphones, round robins
+    and layers. "Samples/kick_24/phit/cl/k_phit_rr1.flac" is "kick 24 phit"."""
     evaluator = Evaluator(program)
     seen = {}
     for note in notes:
         paths = sorted({v.sample for v in evaluator.voices(note)})
         if paths:
             seen[note] = paths[0]
-    folders = {}
-    for path in seen.values():
-        folders.setdefault(os.path.dirname(path), set()).add(path)
+    if not seen:
+        return {}
+    root = os.path.commonpath([os.path.dirname(p) for p in seen.values()])
+    noise = re.compile(r"(vl|rr|dl|v|l)?\d+|.*mic.*")
     out = {}
     for note, path in seen.items():
-        if len({p for n, p in seen.items()
-                if os.path.dirname(p) == os.path.dirname(path)}) == 1 \
-                or len({os.path.basename(p)[:4] for n, p in seen.items()
-                        if os.path.dirname(p) == os.path.dirname(path)}) == 1:
-            out[note] = os.path.basename(os.path.dirname(path))
-        else:
-            words = [w for w in os.path.splitext(os.path.basename(path))[0]
-                     .split("_") if not re.fullmatch(r"(vl|rr|dl|v)?\d+", w)
-                     and w not in ("top", "btm", "oh", "room", "close")]
-            out[note] = "_".join(words)
+        parts = os.path.relpath(path, root).split(os.sep)
+        folders = [f for f in parts[:-1]
+                   if not noise.fullmatch(f.lower())
+                   and f.lower() not in MIC_WORDS]
+        group = folders[0].replace("_", " ") if folders else ""
+        stem = [w for w in re.split(r"[_\s-]+",
+                                    os.path.splitext(parts[-1])[0])
+                if w and not noise.fullmatch(w.lower())
+                and w.lower() not in MIC_WORDS]
+        # "k_phit" in kick_24: the first word abbreviates the folder.
+        if group and len(stem) > 1 and len(stem[0]) <= 3:
+            stem = stem[1:]
+        extra = [w for w in stem if w.lower() not in group.lower().split()]
+        out[note] = " ".join([group] + extra).strip() or f"Note {note}"
     return out
+
+
+# A CC that picks what is played, not how it is mixed: a hi-hat's openness,
+# a stir's select, snares off. Mic, colour and level controls ("Snare top",
+# "Kick punch") stay at the program's defaults, and so does sticking (which
+# hand), whose takes are near-duplicates.
+ARTICULATION = re.compile(
+    r"open|position|select|snares? off|choke|brush|mallet|rods?\b", re.I)
+
+
+def pretty(name):
+    """"tom-floor-2" and "kick_24 phit" as "Tom Floor 2" and "Kick 24 Phit"."""
+    words = re.split(r"[-_\s]+", name.strip())
+    return " ".join(w[:1].upper() + w[1:] for w in words if w)
 
 
 MIX_CONTROL = re.compile(
@@ -543,7 +568,8 @@ def switching_ccs(program, note, base):
     for number, cuts in edges.items():
         # A mix control (Swirly's "Snare ambience" turns room mics on) is
         # the program's balance, not a sound: the defaults are the port's.
-        if MIX_CONTROL.search(program.labels.get(number, "")):
+        label = program.labels.get(number, "")
+        if MIX_CONTROL.search(label) or not ARTICULATION.search(label):
             continue
         cuts = sorted(c for c in cuts if 0 <= c <= 128)
         current = evaluator.ccvalue(number)
@@ -578,7 +604,8 @@ def target_full(args, layout):
     names = note_names(kit, program)
     for note, name in guessed_names(
             program, [n for n in range(128) if n not in names]).items():
-        names[note] = name.replace("_", " ")
+        names[note] = name
+    names = {n: pretty(v) for n, v in names.items()}
     base = dict(kit.get("cc") or {})
 
     # (note, name, cc overrides) for every file: each note at the defaults,
