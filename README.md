@@ -15,6 +15,27 @@ links to it. Bitwig cannot load SFZ, which is the only reason these ports
 exist: an SFZ player gets more from the original, with every microphone and
 control.
 
+## What you get
+
+- **One click to play.** A drum kit loads as a Drum Machine with every sound on
+  its own pad. Pads are One-shot, a closed hi-hat cuts the open one, and a
+  re-hit rings over the previous hit, as in Bitwig's own acoustic kits. An
+  instrument loads as a Sampler with its velocity layers, round robins and
+  loops.
+- **Mod Tone, a brightness control.** Every Sampler has a 4-pole low-pass
+  filter starting at about 10 kHz, with no resonance. Hard notes open it
+  fully, so soft playing is a little darker, as on the real instrument. The
+  first control on the preset's **Perform** remote page, **Mod Tone**, is that
+  filter's cutoff. Turn it down and the sound darkens. Map it to your mod
+  wheel or a knob to play brightness live.
+- **On a drum kit**, Mod Tone is on the Drum Machine's own Perform page,
+  mapped to the first pad's cutoff. Every pad has the same filter. Bitwig maps
+  a remote control to a single parameter, so on its own Mod Tone darkens the
+  first pad only. A controller script that copies its value to every pad's
+  cutoff makes it darken the whole kit.
+- **The raw sounds too.** Every sound or instrument also ships as a
+  `.multisample`, for building your own presets or Drum Machine pads.
+
 ## Libraries
 
 Each library's newest release is linked from its name; *all versions* lists
@@ -124,11 +145,6 @@ A piano, keys, bass, guitar, strings or synth library:
 - **`<slug>-multisamples.tar`**: every instrument as a `.multisample`.
   Round robins keep their first take; legato, keyswitches and
   controller-driven articulations are not carried over.
-
-A preset's **Perform** remote page holds **Mod Tone**, a low-pass cutoff:
-turned down, the sound darkens. The BW_AKAI controller script in
-[audio-rig](https://github.com/HomeLab-Forge/audio-rig) puts it on the mod
-wheel, and on a Drum Machine copies it to every pad.
 
 A `.multisample` is Bitwig's own format: a zip of 24-bit WAV files plus a
 `multisample.xml` keymap. Velocity layers and round robins are kept; the
