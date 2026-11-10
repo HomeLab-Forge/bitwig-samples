@@ -35,6 +35,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
 import bitwigdoc as bw  # noqa: E402
 import drumlayout  # noqa: E402
 import sfzkit  # noqa: E402
+import tone  # noqa: E402
 
 # Field ids, as read off presets Bitwig 6.1 wrote.
 PAD_UUID, PAD_NOTE = 0x2AB8, 0x08E5
@@ -312,7 +313,7 @@ def full_layout(pads, kit, start=36):
 
 
 def build(reference, pads_dir, kit, layout, installed, full=False,
-          banks=None, bank_layout=None):
+          banks=None, bank_layout=None, with_tone=True):
     ref = Reference(reference)
     paths = sorted(p for p in os.listdir(pads_dir) if p.endswith(".multisample"))
     if full:
@@ -342,6 +343,11 @@ def build(reference, pads_dir, kit, layout, installed, full=False,
             if isinstance(kit.get("roles", {}).get(role), dict) else voices
         built.append(build_pad(ref, pad, int(n), installed))
     ref.drum_pads.set(PADS, built)
+    # A low-pass on every pad and Mod Tone on the Drum Machine, which BW_AKAI's
+    # mod wheel drives and copies to every pad (see tools/tone.py).
+    if with_tone:
+        tone.drum_machine(tone.Template(), ref.doc.root, built,
+                          min(p.note for p in pads))
     # Chokes as Bitwig's own acoustic kits have them (Acoustic Drums Kit
     # Yamaha): only the hi-hat, and one way. Each `chokes:` entry is
     # {from: [roles], to: [roles]}: a hit on any pad of a `from` role cuts
@@ -401,6 +407,9 @@ def main(argv=None):
     parser.add_argument("--banks",
                         help="with --full: a pads folder from `sfzkit.py "
                              "build --own` with --layout, played first")
+    parser.add_argument("--no-tone", action="store_true",
+                        help="leave out the low-pass filters and the Mod Tone "
+                             "control (tools/tone.py)")
     parser.add_argument("-o", "--output", required=True)
     args = parser.parse_args(argv)
     layout = None if args.full and not args.banks else \
@@ -414,7 +423,7 @@ def main(argv=None):
         installed = "."
     data, pads, chokes = build(args.reference, args.pads, kit, layout,
                                installed, full=args.full, banks=args.banks,
-                               bank_layout=layout)
+                               bank_layout=layout, with_tone=not args.no_tone)
     with open(args.output, "wb") as fh:
         fh.write(data)
     print(f"wrote {args.output}: {pads} pads, {chokes} chokes, "

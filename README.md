@@ -125,6 +125,11 @@ A piano, keys, bass, guitar, strings or synth library:
   Round robins keep their first take; legato, keyswitches and
   controller-driven articulations are not carried over.
 
+A preset's **Perform** remote page holds **Mod Tone**, a low-pass cutoff:
+turned down, the sound darkens. The BW_AKAI controller script in
+[audio-rig](https://github.com/HomeLab-Forge/audio-rig) puts it on the mod
+wheel, and on a Drum Machine copies it to every pad.
+
 A `.multisample` is Bitwig's own format: a zip of 24-bit WAV files plus a
 `multisample.xml` keymap. Velocity layers and round robins are kept; the
 original's microphones are mixed down to stereo.
